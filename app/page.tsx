@@ -95,6 +95,8 @@ const destinations = [
 ];
 
 function DestinationsSection() {
+  const { isSignedIn } = useUser();
+
   return (
     <section id="destinations" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,13 +105,13 @@ function DestinationsSection() {
             <span className="text-[#FF6B4A] font-bold text-sm uppercase tracking-widest">Explore</span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">Top Destinations</h2>
           </div>
-          <Link href="/" className="text-[#FF6B4A] font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+          <Link href={isSignedIn ? "/dashboard" : "/sign-in?force_redirect_url=/dashboard"} className="text-[#FF6B4A] font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
             View all <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {destinations.map((d) => (
-            <Link href="/" key={d.name} className="relative rounded-2xl overflow-hidden group">
+            <Link href={isSignedIn ? "/dashboard" : "/sign-in?force_redirect_url=/dashboard"} key={d.name} className="relative rounded-2xl overflow-hidden group">
               <div className="relative h-56">
                 <Image src={d.img} alt={d.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -241,24 +243,14 @@ function TestimonialsSection() {
 function HeroSection() {
   const router = useRouter();
   const { isSignedIn } = useUser();
-  const [location, setLocation] = useState("");
-  const [checkIn, setCheckIn] = useState("");
-  const [guests, setGuests] = useState("1");
 
   const handleSearch = (e: React.MouseEvent) => {
     e.preventDefault();
     
-    const params = new URLSearchParams();
-    if (location) params.set("location", location);
-    if (checkIn) params.set("checkIn", checkIn);
-    if (guests) params.set("guests", guests);
-    
-    const searchUrl = `/listings?${params.toString()}`;
-
     if (!isSignedIn) {
-      router.push(`/sign-in?redirect_url=/dashboard`);
+      router.push(`/sign-in?force_redirect_url=/dashboard`);
     } else {
-      router.push(searchUrl);
+      router.push(`/dashboard`);
     }
   };
 
@@ -278,34 +270,9 @@ function HeroSection() {
           Discover unique stays, from cozy cabins to luxury villas. Book with confidence, experience the world differently.
         </p>
         
-        <div className="bg-white rounded-2xl shadow-2xl p-2 max-w-3xl mx-auto flex flex-col sm:flex-row gap-2">
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-text">
-            <svg className="w-5 h-5 text-[#FF6B4A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            <div className="text-left w-full">
-              <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide">Where</div>
-              <input type="text" placeholder="Search destinations" value={location} onChange={e => setLocation(e.target.value)} className="w-full text-sm text-slate-900 outline-none bg-transparent" />
-            </div>
-          </div>
-          <div className="hidden sm:block w-px bg-gray-200 my-3" />
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-text text-left">
-            <svg className="w-5 h-5 text-[#FF6B4A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-            <div className="text-left w-full">
-              <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide">When</div>
-              <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)} className="w-full text-sm text-slate-900 outline-none bg-transparent" />
-            </div>
-          </div>
-          <div className="hidden sm:block w-px bg-gray-200 my-3" />
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer text-left">
-            <svg className="w-5 h-5 text-[#FF6B4A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            <div className="text-left min-w-[100px]">
-              <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide">Who</div>
-              <select value={guests} onChange={e => setGuests(e.target.value)} className="w-full text-sm text-slate-900 outline-none bg-transparent cursor-pointer">
-                {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>)}
-              </select>
-            </div>
-          </div>
-          <button onClick={handleSearch} className="flex items-center justify-center gap-2 bg-[#FF6B4A] hover:bg-[#E55A3D] text-white font-bold rounded-xl px-6 py-3 transition-all hover:shadow-lg shrink-0">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <div className="flex justify-center mt-8">
+          <button onClick={handleSearch} className="flex items-center justify-center gap-2 bg-[#FF6B4A] hover:bg-[#E55A3D] text-white font-bold rounded-full px-10 py-4 transition-all hover:shadow-lg text-lg">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             Search
           </button>
         </div>

@@ -62,7 +62,7 @@ export default function LandingHeader() {
                     {/* CTA Buttons */}
                     <div className="hidden md:flex items-center gap-3">
                         <Show when="signed-out">
-                            <SignInButton mode="modal">
+                            <SignInButton mode="modal" forceRedirectUrl="/dashboard">
                                 <button
                                     className={`text-sm font-semibold px-4 py-2 rounded-full transition-all ${scrolled ? "text-slate-700 hover:bg-gray-100" : "text-white hover:bg-white/10"
                                         }`}
@@ -70,7 +70,7 @@ export default function LandingHeader() {
                                     Log in
                                 </button>
                             </SignInButton>
-                            <SignUpButton mode="modal">
+                            <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
                                 <button
                                     className="text-sm font-bold px-5 py-2.5 rounded-full bg-[#FF6B4A] text-white hover:bg-[#E55A3D] transition-all shadow-lg hover:shadow-[#FF6B4A]/30 hover:scale-105"
                                 >
@@ -127,12 +127,12 @@ export default function LandingHeader() {
                         ))}
                         <div className="flex gap-3 pt-2">
                             <Show when="signed-out">
-                                <SignInButton mode="modal">
+                                <SignInButton mode="modal" forceRedirectUrl="/dashboard">
                                     <button className="flex-1 text-center py-2.5 rounded-full border border-gray-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 w-full">
                                         Log in
                                     </button>
                                 </SignInButton>
-                                <SignUpButton mode="modal">
+                                <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
                                     <button className="flex-1 text-center py-2.5 rounded-full bg-[#FF6B4A] text-white font-bold text-sm hover:bg-[#E55A3D] w-full">
                                         Sign up
                                     </button>
